@@ -4,3 +4,4 @@
 from .controller import Run
 from .ipc import IndicePreciosConsumo
 from .ims import IndiceMedioSalarios
+from .iccv import IndiceCostoConstruccionVivienda

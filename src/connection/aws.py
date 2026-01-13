@@ -1,10 +1,11 @@
 import mysql.connector
 
 conn = mysql.connector.connect(
-    host="webscrapping.ckn6oeiko8za.us-east-1.rds.amazonaws.com",
+    host="estadisticas.ckn6oeiko8za.us-east-1.rds.amazonaws.com",
     port=3306,
     user="rds_superuser_role",
     password="432fdasfvd9uuvcx",
+    database="INE"
 )
 
 cursor = conn.cursor()

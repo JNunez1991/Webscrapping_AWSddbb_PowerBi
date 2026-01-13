@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Orquestador principal de webscrapping"""
+"""Descarga, limpia y filtra los datos de IPC"""
 
 from dataclasses import dataclass, field
 from io import StringIO
@@ -36,6 +36,7 @@ class IndicePreciosConsumo:
         self.navigate()
         data = self.get_data()
         data = self.clean_data(data)
+        data.columns = self.set_colnames()
         return data
 
     def navigate(
@@ -79,8 +80,12 @@ class IndicePreciosConsumo:
         data = data[data["Nombre"] == keep]
         data = data.drop(data.columns[2], axis=1) # borro la columna de 'Descripcion'
         data.iloc[:,0] = f"{self.month.title()}{self.year}"
-        data.iloc[:,1] = data.iloc[:,1].astype(str)
-        data.columns = [
+        return data
+
+    def set_colnames(self) -> list[str]:
+        """Nombres de columnas"""
+
+        return [
             'Periodo',
             'Division',
             'Ponderacion',
@@ -90,5 +95,3 @@ class IndicePreciosConsumo:
             'Var_doce_meses',
             'Incidencia',
         ]
-
-        return data

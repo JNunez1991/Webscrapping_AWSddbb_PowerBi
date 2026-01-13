@@ -11,3 +11,4 @@ class StoredOutputs:
 
     ipc: pd.DataFrame
     ims: pd.DataFrame
+    iccv: pd.DataFrame

@@ -7,7 +7,6 @@ from enum import StrEnum
 class Rutas(StrEnum):
     """URLs del proyecto"""
 
-    # BASE_INE = "https://www5.ine.gub.uy/documents/Estad%C3%ADsticasecon%C3%B3micas/HTML/IPC"
     BASE_INE = "https://www.gub.uy/instituto-nacional-estadistica/comunicacion/publicaciones"
 
 

@@ -8,6 +8,7 @@ from selenium import webdriver
 from .blueprint import StoredOutputs
 from .ipc import IndicePreciosConsumo
 from .ims import IndiceMedioSalarios
+from .iccv import IndiceCostoConstruccionVivienda
 
 
 @dataclass
@@ -23,13 +24,17 @@ class Run:
 
         driver = self.set_driver()
 
-        # Datos de inflacion
+        # Datos de IPC
         ipc = IndicePreciosConsumo(self.url, self.month, self.year, driver)
         data_ipc = ipc.run_all()
 
-        # Datos de Unidad Indexada
+        # Datos de IMS
         ims = IndiceMedioSalarios(self.url, self.month, self.year, driver)
         data_ims = ims.run_all()
+
+        # Datos de ICCV
+        iccv = IndiceCostoConstruccionVivienda(self.url, self.month, self.year, driver)
+        data_iccv = iccv.run_all()
 
         # Cierro driver
         driver.quit()
@@ -37,6 +42,7 @@ class Run:
         return StoredOutputs(
             ipc=data_ipc,
             ims=data_ims,
+            iccv=data_iccv,
         )
 
 
