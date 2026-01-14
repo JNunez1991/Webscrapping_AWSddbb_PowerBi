@@ -24,17 +24,18 @@ class Main:
     def run_all(self):
         """Ejecuta el proceso paso a paso"""
 
-        # Conexion a la bbdd de AWS (connection, cursor & engine)
-        conection = Connection(Rutas.ROOT_PATH)
-        conn = conection.run_all()
-
         # Obtiene año/mes desde el usuario
         anio, mes = self.utils.user_input()
         mes = self.utils.month_to_string(mes)
 
+        # Conexion a la bbdd de AWS (connection, cursor & engine)
+        conection = Connection(Rutas.ROOT_PATH)
+        conn = conection.run_all()
+
         # Llamo al controller que orquesta la descarga de informacion
         webscr = Webscrapping(Rutas.INE_URL, mes, anio)
         data = webscr.run_all()
+
 
         return conn, data
 
@@ -42,4 +43,4 @@ class Main:
 if __name__ == "__main__":
 
     main = Main()
-    pars = main.run_all()
+    results = main.run_all()

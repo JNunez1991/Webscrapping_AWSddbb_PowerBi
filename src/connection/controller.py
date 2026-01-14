@@ -61,7 +61,7 @@ class Connection:
                 user = credentials.user,
                 password = credentials.password,
             )
-            print(" -- Conexion a base de datos exitosa...")
+            print(" -. Conexion a base de datos exitosa...")
             return conn # type:ignore
         except mysql.Error as exc:
             msg = " -- [ERROR]: No se pudo establacer conexion con la base de datos. Verifique."
