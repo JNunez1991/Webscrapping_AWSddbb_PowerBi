@@ -6,7 +6,7 @@ from dataclasses import dataclass, field, asdict
 from config import Rutas, Meses, TableNames
 from src.utils import Utils
 from src.webscrap import Webscrapping
-from src.connection import Connection
+from src.connection import SetConnection
 
 
 @dataclass
@@ -29,7 +29,7 @@ class Main:
         mes = self.utils.month_to_string(mes)
 
         # Conexion a la bbdd de AWS (connection, cursor & engine)
-        conection = Connection(Rutas.ROOT_PATH)
+        conection = SetConnection(Rutas.ROOT_PATH)
         conn = conection.run_all()
 
         # Llamo al controller que orquesta la descarga de informacion
@@ -37,9 +37,9 @@ class Main:
         data = webscr.run_all()
 
         # Guardo la data en bbdd
-        conection.persist_data(data.ipc, TableNames.IPC, conn.engine)
-        conection.persist_data(data.ims, TableNames.IMS, conn.engine)
-        conection.persist_data(data.iccv, TableNames.ICCV, conn.engine)
+        conection.to_datablase(data.ipc, TableNames.IPC, conn.engine)
+        conection.to_datablase(data.ims, TableNames.IMS, conn.engine)
+        conection.to_datablase(data.iccv, TableNames.ICCV, conn.engine)
 
         return data
 

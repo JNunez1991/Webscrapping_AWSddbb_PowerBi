@@ -1,4 +1,4 @@
 #!/usr/bin/env python3
 """Clases de la carpeta"""
 
-from .controller import Connection
+from .controller import SetConnection

@@ -3,19 +3,23 @@
 
 import os
 from dataclasses import dataclass
+from typing import Iterable
 
 import pandas as pd
-from dotenv import load_dotenv
 import mysql.connector as mysql
+from dotenv import load_dotenv
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.cursor import MySQLCursor
+from pandas.io.sql import SQLTable
 from sqlalchemy import create_engine, text
+from sqlalchemy.dialects.mysql import insert
 from sqlalchemy.engine import Engine
+from sqlalchemy.engine import Connection
 
 from .blueprint import Credentials, SqlStructures
 
 @dataclass
-class Connection:
+class SetConnection:
     """Conexion a AWS"""
 
     path:str
@@ -85,7 +89,7 @@ class Connection:
 
         return engine
 
-    def persist_data(
+    def to_datablase(
         self,
         data:pd.DataFrame,
         tablename:str,
@@ -97,6 +101,7 @@ class Connection:
         self.data_to_ddbb(data, tablename, engine)
         after = self.get_total_rows(tablename, engine)
         print(f"    --> Se añadieron {after - before} registros en la tabla '{tablename}'")
+
 
     def get_total_rows(
         self,
@@ -127,7 +132,24 @@ class Connection:
                 con=engine,
                 if_exists="append",
                 index=False,
+                method=self.insert_ignore,
             )
         except mysql.Error as exc:
             msg = f"    --> [ERROR]: No se pudieron persistir los datos en '{tablename}'"
             raise ConnectionError(msg) from exc
+
+    def insert_ignore(
+        self,
+        table:SQLTable,
+        conn:Connection,
+        keys:list[str],
+        data_iter:Iterable[tuple],
+    ) -> None:
+        """
+        Persiste datos en bbdd ignorando duplicados.
+        Es decir, si el dato ya existe, no lo vuelve a guardar.
+        """
+        data = [dict(zip(keys, row)) for row in data_iter]
+        stmt = insert(table.table).values(data)
+        stmt = stmt.prefix_with("IGNORE")
+        conn.execute(stmt)

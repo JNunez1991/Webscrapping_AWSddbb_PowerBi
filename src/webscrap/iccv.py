@@ -83,16 +83,18 @@ class IndiceCostoConstruccionVivienda:
         data = data.copy()
         data["Periodo"] = f"{self.month.title()}{self.year}"
         data = data.drop(columns=["Descripción"])
+        data = data[ [data.columns[-1]] + data.columns[:-1].tolist() ]
         data.columns = self.set_colnames()
+        data.iloc[:,2:] = data.iloc[:,2:].replace(",", ".", regex=True).astype(float)
         return data
 
     def set_colnames(self) -> list[str]:
         """Ajusto nombre de las columnas"""
 
         return [
+            'Periodo',
             'Rubro',
             'Indice',
             'VariacionMensual',
             'Incidencias',
-            'Periodo',
         ]
