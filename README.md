@@ -62,7 +62,7 @@ Dado que las estructuras de los sitios web cambian frecuentemente, no se garanti
 └── README.md             # Documentación principal
 ```
 
-## 📋 Funcionamiento
+## 👣 Funcionamiento
 * **Obtencion de datos**
 Ejecutar `main.py` en la raiz del proyecto.
 La herramienta le solicitara al usuario el Año y Mes de la informacion que se desea persistir.
@@ -82,9 +82,17 @@ Importar los datos.
 Repetir el proceso tantas veces como sea necesario.
 Generar dashboard.
 
-
+## ▶️ Videos
+* **Obtencion y persistencia de datos**
 <div align="center">
-  <a href="https://www.youtube.com/watch?v=gF9f2Tq1E1A">
-    <img src="https://img.youtube.com/vi/gF9f2Tq1E1A/0.jpg" width="200">
+  <a href="https://www.youtube.com/watch?v=HUpE8b6IHrY">
+    <img src="https://img.youtube.com/vi/HUpE8b6IHrY/0.jpg" width="400">
+  </a>
+</div>
+
+* **Dashboard Power Bi**
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=_vQ5F9mJHWc">
+    <img src="https://img.youtube.com/vi/_vQ5F9mJHWc/0.jpg" width="400">
   </a>
 </div>

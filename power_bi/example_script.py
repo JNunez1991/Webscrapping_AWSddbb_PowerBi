@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Codigo de ejemplo que se corre dentro de PowerBi
 PowerBi no ejecuta este codigo. Solo sirve para ver como correr el script dentro de PowerBi
@@ -12,7 +11,7 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 
-ROOT_DIR = r"C:\Users\javie\Documents\Repositorios\Publicos\AWS_Database"
+ROOT_DIR = r"C:\Users\javie\Documents\Repositorios\Publicos\Webscrapping_AWSddbb_PowerBi"
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 
