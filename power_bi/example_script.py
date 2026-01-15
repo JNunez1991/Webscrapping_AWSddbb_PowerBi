@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Orquestador principal del proyecto"""
+"""
+Codigo de ejemplo que se corre dentro de PowerBi
+PowerBi no ejecuta este codigo. Solo sirve para ver como correr el script dentro de PowerBi
+"""
+
+import sys
 
 from dataclasses import dataclass, field
 
@@ -7,12 +12,16 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 
+ROOT_DIR = r"C:\Users\javie\Documents\Repositorios\Publicos\AWS_Database"
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
+
 from config import Rutas
 from src.connection import SetConnection, Credentials
 
 
 @dataclass
-class GetData:
+class PowerBi:
     """Obtiene la data desde AWS y la muestra en PowerBi"""
 
     engine:Engine = field(init=False)
@@ -38,6 +47,6 @@ class GetData:
         return pd.read_sql(text(qry), self.engine)
 
 
-if __name__ == "__main__":
-    getter = GetData()
-    dataset = getter.get("CALL sp_get_iccv()")
+powerbi = PowerBi()
+QUERY = "CALL sp_get_ipc()"
+data = powerbi.get(QUERY)

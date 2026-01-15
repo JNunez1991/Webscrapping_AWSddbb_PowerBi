@@ -8,17 +8,23 @@ CREATE TABLE t_desc_ipc (
 
 
 -- Creo la tabla donde se almaceran los datos de IPC
--- DECIMAL(18,4) = 18 digitos en total (ultimos 4 son decimales)
+-- UNSIGNED: No permite valores negativos
+-- DECIMAL(18,4): 18 digitos en total (ultimos 4 son decimales)
 CREATE TABLE t_ipc (
-	Periodo VARCHAR(15), 
-	Division TINYINT,
-	Ponderacion DECIMAL(18,4) NOT NULL, 
-	Indice DECIMAL(18,4) NOT NULL, 
-	Var_mensual DECIMAL(18,4) NOT NULL,
-    Var_ac_anual DECIMAL(18,4) NOT NULL, 
-    Var_doce_meses DECIMAL(18,4) NOT NULL, 
+    id_insert BIGINT UNSIGNED AUTO_INCREMENT,
+
+    Periodo VARCHAR(15) NOT NULL,
+    Division TINYINT NOT NULL,
+
+    Ponderacion DECIMAL(18,4) NOT NULL,
+    Indice DECIMAL(18,4) NOT NULL,
+    Var_mensual DECIMAL(18,4) NOT NULL,
+    Var_ac_anual DECIMAL(18,4) NOT NULL,
+    Var_doce_meses DECIMAL(18,4) NOT NULL,
     Incidencia DECIMAL(18,4) NOT NULL,
-    PRIMARY KEY (Periodo, Division)
+
+    PRIMARY KEY (id_insert),
+    UNIQUE KEY uq_periodo_division (Periodo, Division)
 );
 
 -- Creo la tabla de descripcion IMS
@@ -29,14 +35,18 @@ CREATE TABLE t_desc_ims (
 
 -- Creo la tabla donde se almaceran los datos de IMS
 CREATE TABLE t_ims (
+	id_insert BIGINT UNSIGNED AUTO_INCREMENT,
+	
 	Periodo VARCHAR(15), 
 	Sector CHAR(1),
+	
 	Indice DECIMAL(18,4) NOT NULL, 
 	Mes DECIMAL(18,4) NOT NULL, 
 	AcumuladoAnual DECIMAL(18,4) NOT NULL,
     UltimosDoceMeses DECIMAL(18,4) NOT NULL, 
     Incidencias DECIMAL(18,4) NOT NULL, 
-    PRIMARY KEY (Periodo, Sector)
+    PRIMARY KEY (id_insert),
+    UNIQUE KEY uq_periodo_sector (Periodo, Sector)
 );
 
 
@@ -48,12 +58,17 @@ CREATE TABLE t_desc_iccv (
 
 -- Creo la tabla donde se almacenaran los datos de IMS
 CREATE TABLE t_iccv (
+	id_insert BIGINT UNSIGNED AUTO_INCREMENT,
+	
 	Periodo VARCHAR(15), 
 	Rubro TINYINT,
+	
 	Indice DECIMAL(18,4) NOT NULL, 
 	VariacionMensual DECIMAL(18,4) NOT NULL, 
     Incidencias DECIMAL(18,4) NOT NULL, 
-    PRIMARY KEY (Periodo, Rubro)
+    
+    PRIMARY KEY (id_insert),
+    UNIQUE KEY uq_periodo_rubro (Periodo, Rubro)
 );
 
 -- Muestra las tablas creadas
