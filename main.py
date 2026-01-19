@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Orquestador principal del proyecto"""
 
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 
-from config import Rutas, Meses, TableNames
+from config import Rutas, TableNames
 from src.connection import SetConnection
 from src.utils import Utils
 from src.webscrap import Webscrapping
@@ -13,13 +13,7 @@ from src.webscrap import Webscrapping
 class Main:
     """Clase principal que se encarga de orquestar el webscrapping y la persistencia de datos"""
 
-    utils:Utils = field(init=False)
-
-    def __post_init__(self):
-        """Se ejecuta luego de instanciar la clase"""
-
-        meses = asdict(Meses())
-        self.utils = Utils(meses)
+    utils:Utils = field(default_factory=Utils)
 
     def run_all(self) -> None:
         """Ejecuta el proceso paso a paso"""
@@ -29,20 +23,21 @@ class Main:
 
         # Obtiene año/mes desde el usuario
         anio, mes = self.utils.user_input()
-        mes = self.utils.month_to_string(mes)
+        str_mes = self.utils.month_to_string(mes)
+        full_date = self.utils.period_date(anio, mes)
 
         # Conexion a la bbdd de AWS (connection, cursor & engine)
         conection = SetConnection(Rutas.ROOT_PATH)
-        conn = conection.run_all()
+        engine = conection.get_engine()
 
         # Llamo al controller que orquesta la descarga de informacion
-        webscr = Webscrapping(Rutas.INE_URL, mes, anio)
+        webscr = Webscrapping(Rutas.INE_URL, full_date, str_mes)
         data = webscr.run_all()
 
         # Guardo la data en bbdd
-        conection.to_database(data.ipc, TableNames.IPC, conn.engine)
-        conection.to_database(data.ims, TableNames.IMS, conn.engine)
-        conection.to_database(data.iccv, TableNames.ICCV, conn.engine)
+        conection.to_database(data.ipc, TableNames.IPC, engine)
+        conection.to_database(data.ims, TableNames.IMS, engine)
+        conection.to_database(data.iccv, TableNames.ICCV, engine)
 
 
 if __name__ == "__main__":

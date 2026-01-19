@@ -1,16 +1,32 @@
 #!/usr/bin/env python3
 """Funciones auxiliares"""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+from datetime import date
 
 import arrow
 import pyfiglet
 
+@dataclass(frozen=True)
+class Meses:
+    """Meses del año"""
+
+    enero: int = 1
+    febrero: int = 2
+    marzo: int = 3
+    abril: int = 4
+    mayo: int = 5
+    junio: int = 6
+    julio: int = 7
+    agosto: int = 8
+    septiembre: int = 9
+    octubre: int = 10
+    noviembre: int = 11
+    diciembre: int = 12
+
 @dataclass
 class Utils:
     """Funciones auxiliares"""
-
-    meses:dict[str, int]
 
     def print_header(self, texto:str, font="slant") -> None:
         """Titulo en consola"""
@@ -61,8 +77,14 @@ class Utils:
             except ValueError:
                 print("  -- [ERROR]: Por favor, introduce un número entero válido.")
 
+    def period_date(self, year:int, month:int, day:int=1) -> date:
+        """Genera la fecha"""
+
+        return date(year, month, day)
+
     def month_to_string(self, month:int) -> str:
         """Transforma el numero de mes en su correspondiente nombre"""
 
-        meses_invertido = { v: k for k, v in self.meses.items() }
+        meses = asdict(Meses())
+        meses_invertido = { v: k for k, v in meses.items() }
         return meses_invertido[month].lower()

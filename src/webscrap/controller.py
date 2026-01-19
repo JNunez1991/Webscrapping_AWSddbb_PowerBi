@@ -2,6 +2,7 @@
 """Orquestador principal de webscrapping"""
 
 from dataclasses import dataclass
+from datetime import date
 
 from selenium import webdriver
 
@@ -16,8 +17,8 @@ class Webscrapping:
     """Obtengo los datos de Nasdaq del ultimo mes"""
 
     url: str
-    month: str
-    year: int
+    period: date
+    str_month: str
 
     def run_all(self) -> StoredOutputs:
         """Ejecuta la descarga paso a paso"""
@@ -25,15 +26,15 @@ class Webscrapping:
         driver = self.set_driver()
 
         # Datos de IPC
-        ipc = IndicePreciosConsumo(self.url, self.month, self.year, driver)
+        ipc = IndicePreciosConsumo(self.url, self.period, self.str_month, driver)
         data_ipc = ipc.run_all()
 
         # Datos de IMS
-        ims = IndiceMedioSalarios(self.url, self.month, self.year, driver)
+        ims = IndiceMedioSalarios(self.url, self.period, self.str_month, driver)
         data_ims = ims.run_all()
 
         # Datos de ICCV
-        iccv = IndiceCostoConstruccionVivienda(self.url, self.month, self.year, driver)
+        iccv = IndiceCostoConstruccionVivienda(self.url, self.period, self.str_month, driver)
         data_iccv = iccv.run_all()
 
         # Cierro driver

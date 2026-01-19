@@ -62,6 +62,12 @@ Dado que las estructuras de los sitios web cambian frecuentemente, no se garanti
 └── README.md             # Documentación principal
 ```
 
+## 🗄️ Estructura base de datos
+La base de datos contiene seis tablas, tres con la informacion descargada mediante webscrapping, y otras tres con informacion adicional que no vale la pena persistir en la tabla principal dado que es repetitiva.
+<div align="center">
+  <img src="imgs/ddbb_structure.jpg" width="400">
+</div>
+
 ## 👣 Funcionamiento
 * **Obtencion de datos**
 Ejecutar `main.py` en la raiz del proyecto.

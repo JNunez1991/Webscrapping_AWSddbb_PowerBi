@@ -2,6 +2,7 @@
 """Descarga, limpia y filtra los datos de IPC"""
 
 from dataclasses import dataclass, field
+from datetime import date
 from io import StringIO
 
 import pandas as pd
@@ -17,9 +18,10 @@ class IndicePreciosConsumo:
     """Obtengo los datos de Inflacion del ultimo mes"""
 
     url: str
-    month: str
-    year: int
+    period: date
+    str_month: str
     driver: webdriver.Chrome
+    year:int = field(init=False)
     xpath:str = '//*[@id="block-starterkits-content"]/article/div/ul/li/a'
     utils: Utils = field(default_factory=Utils)
 
@@ -27,7 +29,8 @@ class IndicePreciosConsumo:
         """Se ejecuta luego de instanciar la clase"""
 
         print("  -. Obteniendo datos de Indice de Precios al Consumo...")
-        self.url = f"{self.url}/indice-precios-del-consumo-ipc-{self.month}-{self.year}"
+        self.year = self.period.year
+        self.url = f"{self.url}/indice-precios-del-consumo-ipc-{self.str_month}-{self.year}"
         self.utils.check_url_exists(self.url)
 
     def run_all(self) -> pd.DataFrame:
@@ -37,6 +40,7 @@ class IndicePreciosConsumo:
         data = self.get_data()
         data = self.clean_data(data)
         data.columns = self.set_colnames()
+        data.id_division = data.id_division.astype(int)
         return data
 
     def navigate(
@@ -79,19 +83,19 @@ class IndicePreciosConsumo:
         data = data.dropna(ignore_index=True)
         data = data[data["Nombre"] == keep]
         data = data.drop(data.columns[2], axis=1) # borro la columna de 'Descripcion'
-        data.iloc[:,0] = f"{self.month.title()}{self.year}"
+        data.iloc[:,0] = self.period
         return data
 
     def set_colnames(self) -> list[str]:
         """Nombres de columnas"""
 
         return [
-            'Periodo',
-            'Division',
-            'Ponderacion',
-            'Indice',
-            'Var_mensual',
-            'Var_ac_anual',
-            'Var_doce_meses',
-            'Incidencia',
+            'periodo',
+            'id_division',
+            'ponderacion',
+            'indice',
+            'var_mensual',
+            'var_ac_anual',
+            'var_doce_meses',
+            'incidencia',
         ]

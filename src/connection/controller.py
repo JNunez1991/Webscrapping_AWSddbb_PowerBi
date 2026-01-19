@@ -27,7 +27,7 @@ class SetConnection:
         fullpath = os.path.join(self.path, ".env")
         load_dotenv(fullpath)
 
-    def run_all(self) -> Engine:
+    def get_engine(self) -> Engine:
         """Ejecuta todo el proceso"""
 
         credentials = self.get_credentials()
@@ -75,7 +75,12 @@ class SetConnection:
         before = self.get_total_rows(tablename, engine)
         self.data_to_ddbb(data, tablename, engine)
         after = self.get_total_rows(tablename, engine)
-        print(f"    --> Se añadieron {after - before} registros en la tabla '{tablename}'")
+
+        rows = after - before
+        if rows > 0:
+            print(f"    --> Se añadieron {after - before} registros en la tabla '{tablename}'")
+            return
+        print(f"    --> No se añadieron nuevos registros en {tablename}")
 
     def get_total_rows(
         self,
@@ -118,12 +123,12 @@ class SetConnection:
         conn:Connection,
         keys:list[str],
         data_iter:Iterable[tuple],
-    ) -> None:
+    ) -> int:
         """
         Persiste datos en bbdd ignorando duplicados.
         Es decir, si el dato ya existe, no lo vuelve a guardar.
         """
         data = [dict(zip(keys, row)) for row in data_iter]
-        stmt = insert(table.table).values(data)
-        stmt = stmt.prefix_with("IGNORE")
-        conn.execute(stmt)
+        stmt = insert(table.table).values(data).prefix_with("IGNORE")
+        result = conn.execute(stmt)
+        return result.rowcount

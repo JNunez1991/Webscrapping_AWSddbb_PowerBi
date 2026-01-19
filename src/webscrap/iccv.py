@@ -3,6 +3,7 @@
 
 import re
 from dataclasses import dataclass, field
+from datetime import date
 from io import StringIO
 
 import pandas as pd
@@ -18,9 +19,10 @@ class IndiceCostoConstruccionVivienda:
     """Obtengo los datos de Nasdaq del ultimo mes"""
 
     url: str
-    month: str
-    year: int
+    period: date
+    str_month: str
     driver: webdriver.Chrome
+    year: int  = field(init=False)
     xpath:str = '//*[@id="block-starterkits-content"]/article/div/ul/li/a'
     utils: Utils = field(default_factory=Utils)
 
@@ -28,7 +30,8 @@ class IndiceCostoConstruccionVivienda:
         """Se ejecuta luego de instanciar la clase"""
 
         print("  -. Obteniendo datos de Indice Costo Construccion de Vivienda...")
-        self.url = f"{self.url}/indice-costo-construccion-vivienda-iccv-{self.month}-{self.year}"
+        self.year = self.period.year
+        self.url = f"{self.url}/indice-costo-construccion-vivienda-iccv-{self.str_month}-{self.year}"
         self.utils.check_url_exists(self.url)
 
     def run_all(self) -> pd.DataFrame:
@@ -37,7 +40,9 @@ class IndiceCostoConstruccionVivienda:
         self.navigate()
         data = self.get_data()
         data = self.clean_data(data)
-        return data[[data.columns[-1]] + list(data.columns[:-1])]
+        data = data[[data.columns[-1]] + list(data.columns[:-1])]
+        data.id_rubro = data.id_rubro.astype(int)
+        return data
 
     def navigate(self, wait_time:int=1) -> None:
         """Carga le dataframe desde la web"""
@@ -81,7 +86,7 @@ class IndiceCostoConstruccionVivienda:
         """Limpieza de datos"""
 
         data = data.copy()
-        data["Periodo"] = f"{self.month.title()}{self.year}"
+        data["Periodo"] = self.period
         data = data.drop(columns=["Descripción"])
         data = data[ [data.columns[-1]] + data.columns[:-1].tolist() ]
         data.columns = self.set_colnames()
@@ -92,9 +97,9 @@ class IndiceCostoConstruccionVivienda:
         """Ajusto nombre de las columnas"""
 
         return [
-            'Periodo',
-            'Rubro',
-            'Indice',
-            'VariacionMensual',
-            'Incidencias',
+            'periodo',
+            'id_rubro',
+            'indice',
+            'var_mensual',
+            'incidencias',
         ]

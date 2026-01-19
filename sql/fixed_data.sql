@@ -1,10 +1,7 @@
 USE INE;
 
-TRUNCATE TABLE t_desc_ipc;
-TRUNCATE TABLE t_desc_ims;
-
 -- Inserción de datos fijos en t_desc_ipc
-INSERT INTO t_desc_ipc (Division, Descripcion) VALUES
+INSERT INTO t_ipc_desc (id_division, descripcion) VALUES
 (1, 'Alimentos y bebidas no alcoholicas'),
 (2, 'Bebidas alcoholicas, tabaco y estupefacientes'),
 (3, 'Ropa y calzado'),
@@ -21,7 +18,7 @@ INSERT INTO t_desc_ipc (Division, Descripcion) VALUES
 
 
 -- Inserción de datos fijos en t_desc_ims
-INSERT INTO t_desc_ims (Sector, Descripcion) VALUES
+INSERT INTO t_ims_desc (id_sector, descripcion) VALUES
 ('D', 'Industrias Manufactureras'),
 ('F', 'Construccion'),
 ('G', 'Comercio Al Por Mayor Y Al Por Menor; Reparacion De Vehiculos, Efectos Personales Y Enseres Domesticos'),
@@ -32,7 +29,7 @@ INSERT INTO t_desc_ims (Sector, Descripcion) VALUES
 ('M', 'Enseñanza'),
 ('N', 'Servicios Sociales Y De Salud');
 
-INSERT INTO t_desc_iccv (Rubro, descripcion) VALUES
+INSERT INTO t_iccv_desc (id_rubro, descripcion) VALUES
 (1, 'Replanteo, implantación y movimiento de tierra'),
 (2, 'Hormigón armado'),
 (3, 'Albañilería'),

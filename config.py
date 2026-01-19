@@ -19,20 +19,3 @@ class TableNames(StrEnum):
     IPC = "t_ipc"
     IMS = "t_ims"
     ICCV = "t_iccv"
-
-@dataclass(frozen=True)
-class Meses:
-    """Meses del año"""
-
-    enero: int = 1
-    febrero: int = 2
-    marzo: int = 3
-    abril: int = 4
-    mayo: int = 5
-    junio: int = 6
-    julio: int = 7
-    agosto: int = 8
-    septiembre: int = 9
-    octubre: int = 10
-    noviembre: int = 11
-    diciembre: int = 12

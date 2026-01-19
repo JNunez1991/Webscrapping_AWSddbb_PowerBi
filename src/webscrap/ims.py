@@ -3,6 +3,7 @@
 
 import re
 from dataclasses import dataclass, field
+from datetime import date
 from io import StringIO
 
 import numpy as np
@@ -19,9 +20,10 @@ class IndiceMedioSalarios:
     """Obtengo los datos de Nasdaq del ultimo mes"""
 
     url: str
-    month: str
-    year: int
+    period: date
+    str_month: str
     driver: webdriver.Chrome
+    year: int = field(init=False)
     xpath:str = '//*[@id="block-starterkits-content"]/article/div/ul/li/a'
     utils: Utils = field(default_factory=Utils)
 
@@ -29,7 +31,8 @@ class IndiceMedioSalarios:
         """Se ejecuta luego de instanciar la clase"""
 
         print("  -. Obteniendo datos de Indice Medio de Salarios...")
-        self.url = f"{self.url}/indice-medio-salarios-ims-{self.month}-{self.year}"
+        self.year = self.period.year
+        self.url = f"{self.url}/indice-medio-salarios-ims-{self.str_month}-{self.year}"
         self.utils.check_url_exists(self.url)
 
     def run_all(self) -> pd.DataFrame:
@@ -38,7 +41,7 @@ class IndiceMedioSalarios:
         self.navigate()
         data = self.get_data()
         data = self.clean_data(data)
-        return data[[data.columns[-1]] + list(data.columns[:-1])]
+        return data
 
     def navigate(self, wait_time:int=1) -> None:
         """Carga le dataframe desde la web"""
@@ -52,7 +55,7 @@ class IndiceMedioSalarios:
     def get_data(self, wait_time:int=1) -> pd.DataFrame:
         """Obtiene la data desde la web"""
 
-        table_xpath=f'//*[@id="{self.month}-{self.year-1}---{self.month}-{self.year}"]/div[2]/table'
+        table_xpath=f'//*[@id="{self.str_month}-{self.year-1}---{self.str_month}-{self.year}"]/div[2]/table'
         WebDriverWait(self.driver, wait_time).until(
                 EC.presence_of_element_located((By.XPATH, table_xpath))
             )
@@ -82,7 +85,8 @@ class IndiceMedioSalarios:
         data = data.copy()
         data = self.adjust_data(data)
         data = self.filter_data(data)
-        data["Periodo"] = f"{self.month.title()}{self.year}"
+        data["periodo"] = self.period
+        data = data[[data.columns[-1]] + list(data.columns[:-1])]
         data.columns = self.set_colnames()
         return data
 
@@ -107,11 +111,11 @@ class IndiceMedioSalarios:
         """Ajusto nombre de las columnas"""
 
         return [
-            'Sector',
-            'Indice',
-            'Mes',
-            'AcumuladoAnual',
-            'UltimosDoceMeses',
-            'Incidencias',
-            'Periodo',
+            'periodo',
+            'id_sector',
+            'indice',
+            'mes',
+            'acum_anual',
+            'ultimos_doce_meses',
+            'incidencias',
         ]
