@@ -24,7 +24,6 @@ class Main:
         # Conexion a la bbdd de AWS (connection, cursor & engine)
         conection = SetConnection(Rutas.ROOT_PATH)
         engine = conection.get_engine()
-        print(engine)
 
         # Obtiene año/mes desde el usuario
         anio, mes = self.utils.user_input()
