@@ -21,14 +21,16 @@ class Main:
         # Titulo en consola
         self.utils.print_header("Webscrapping & AWS storage")
 
+        # Conexion a la bbdd de AWS (connection, cursor & engine)
+        conection = SetConnection(Rutas.ROOT_PATH)
+        engine = conection.get_engine()
+        print(engine)
+
         # Obtiene año/mes desde el usuario
         anio, mes = self.utils.user_input()
         str_mes = self.utils.month_to_string(mes)
         full_date = self.utils.period_date(anio, mes)
 
-        # Conexion a la bbdd de AWS (connection, cursor & engine)
-        conection = SetConnection(Rutas.ROOT_PATH)
-        engine = conection.get_engine()
 
         # Llamo al controller que orquesta la descarga de informacion
         webscr = Webscrapping(Rutas.INE_URL, full_date, str_mes)

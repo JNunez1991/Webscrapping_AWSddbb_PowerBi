@@ -7,7 +7,7 @@
 - **Fuente**: https://www.gub.uy/instituto-nacional-estadistica/comunicacion/publicaciones
 - **Destino**: MySQL en AWS RDS
 - **Visualización**: Dashboards Power BI
-- **Lenguaje**: Python 3.11.7
+- **Lenguaje**: Python 3.14
 
 ---
 

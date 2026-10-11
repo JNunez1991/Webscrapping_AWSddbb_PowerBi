@@ -41,7 +41,7 @@ class IndiceCostoConstruccionVivienda:
         data = self.get_data()
         data = self.clean_data(data)
         data = data[[data.columns[-1]] + list(data.columns[:-1])]
-        data.id_rubro = data.id_rubro.astype(int)
+        data["id_rubro"] = data.id_rubro.astype(int)
         return data
 
     def navigate(self, wait_time:int=1) -> None:
@@ -89,10 +89,13 @@ class IndiceCostoConstruccionVivienda:
         data["Periodo"] = self.period
         data = data.drop(columns=["Descripción"])
         data = data[ [data.columns[-1]] + data.columns[:-1].tolist() ]
-        data.columns = self.set_colnames()
-        data.iloc[:,2:] = data.iloc[:,2:].replace(",", ".", regex=True).astype(float)
+        cols = self.set_colnames
+        data.columns = cols
+        numeric_cols = cols[2:]
+        data[numeric_cols] = data[numeric_cols].replace(",", ".", regex=True).astype(float)
         return data
 
+    @property
     def set_colnames(self) -> list[str]:
         """Ajusto nombre de las columnas"""
 

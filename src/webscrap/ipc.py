@@ -39,8 +39,8 @@ class IndicePreciosConsumo:
         self.navigate()
         data = self.get_data()
         data = self.clean_data(data)
-        data.columns = self.set_colnames()
-        data.id_division = data.id_division.astype(int)
+        data.columns = self.set_colnames
+        data["id_division"] = data.id_division.astype(int)
         return data
 
     def navigate(
@@ -83,9 +83,12 @@ class IndicePreciosConsumo:
         data = data.dropna(ignore_index=True)
         data = data[data["Nombre"] == keep]
         data = data.drop(data.columns[2], axis=1) # borro la columna de 'Descripcion'
-        data.iloc[:,0] = self.period
+        # Asignar periodo a la primera columna usando .loc para evitar warnings
+        first_col = data.columns[0]
+        data[first_col] = self.period
         return data
 
+    @property
     def set_colnames(self) -> list[str]:
         """Nombres de columnas"""
 

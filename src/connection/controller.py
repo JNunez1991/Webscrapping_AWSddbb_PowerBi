@@ -2,8 +2,9 @@
 """Clase comun al resto de archivos del modulo"""
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Iterable
+from urllib.parse import quote_plus
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -20,12 +21,14 @@ class SetConnection:
     """Conexion a AWS"""
 
     path:str
+    engine: Engine = field(init=False)
 
     def __post_init__(self):
         """Se ejecuta luego de instanciar la clase"""
 
         fullpath = os.path.join(self.path, ".env")
         load_dotenv(fullpath)
+        self.engine = self.get_engine()
 
     def get_engine(self) -> Engine:
         """Ejecuta todo el proceso"""
@@ -37,11 +40,11 @@ class SetConnection:
         """Extrae las credenciales del .env"""
 
         return Credentials(
-            host=os.getenv("HOST"), # type:ignore
-            port=os.getenv("PORT"), # type:ignore
-            database=os.getenv("DATABASE"), # type:ignore
-            user=os.getenv("USER1"), # type:ignore
-            password=os.getenv("PSW1"), # type:ignore
+            host=os.getenv("DB_HOST"), # type:ignore
+            port=os.getenv("DB_PORT"), # type:ignore
+            database=os.getenv("DB_NAME"), # type:ignore
+            user=os.getenv("DB_USER"), # type:ignore
+            password=os.getenv("DB_PASSWORD"), # type:ignore
         )
 
     def set_engine(self, credentials:Credentials) -> Engine:
@@ -61,7 +64,6 @@ class SetConnection:
             f"{credentials.port}/"
             f"{credentials.database}",
             pool_pre_ping=True,
-            future=True,
         )
 
     def to_database(

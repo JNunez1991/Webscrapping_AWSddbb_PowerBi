@@ -64,7 +64,6 @@ class IndiceMedioSalarios:
         tabla_html = table.get_attribute('outerHTML')
         html_limpio = self.clean_html(tabla_html) # type:ignore
         html_content = StringIO(html_limpio)
-        html_content = StringIO(tabla_html)
         tablas = pd.read_html(html_content, decimal=".", thousands=".")
 
         if tablas:
@@ -93,10 +92,18 @@ class IndiceMedioSalarios:
     def adjust_data(self, data:pd.DataFrame) -> pd.DataFrame:
         """Ajusto valores faltantes y transformo columnas a float"""
 
+        data = data.copy()
         data = data.dropna(ignore_index=True)
         data = data.replace(r"\(\s*s\s*\)", np.nan, regex=True)
-        data.iloc[:,1:] = data.iloc[:,1:].replace(",", ".", regex=True).astype(float)
-        data.iloc[:,0] = data.iloc[:,0].str[0] # me quedo con la primer letra
+        
+        # Convertir columnas numéricas (todas excepto la primera) a float
+        # Usar .loc con nombres de columnas para evitar problemas de dtype
+        numeric_cols = data.columns[1:]
+        data[numeric_cols] = data[numeric_cols].replace(",", ".", regex=True).astype(float)
+        
+        # Primera columna: tomar solo la primera letra (código de sector)
+        first_col = data.columns[0]
+        data[first_col] = data[first_col].astype(str).str[0]
         return data
 
     def filter_data(self, data:pd.DataFrame) -> pd.DataFrame:
@@ -104,7 +111,7 @@ class IndiceMedioSalarios:
 
         col = data.columns[0]
         data = data[data[col].str.match(r"^[A-Za-z]")]
-        data = data.iloc[1:,:].reset_index(drop=True)
+        data = data.iloc[1:, :].copy().reset_index(drop=True)
         return data
 
     def set_colnames(self) -> list[str]:

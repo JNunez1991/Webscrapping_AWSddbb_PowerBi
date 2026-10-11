@@ -7,9 +7,9 @@ from datetime import date
 from selenium import webdriver
 
 from .blueprint import StoredOutputs
-from .ipc import IndicePreciosConsumo
-from .ims import IndiceMedioSalarios
 from .iccv import IndiceCostoConstruccionVivienda
+from .ims import IndiceMedioSalarios
+from .ipc import IndicePreciosConsumo
 
 
 @dataclass

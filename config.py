@@ -12,7 +12,6 @@ class Rutas(StrEnum):
     ROOT_PATH = os.path.abspath(Path(__file__).resolve().parent)
     INE_URL = "https://www.gub.uy/instituto-nacional-estadistica/comunicacion/publicaciones"
 
-
 class TableNames(StrEnum):
     """Nombres de las tablas"""
 

@@ -33,8 +33,7 @@ Dado que las estructuras de los sitios web cambian frecuentemente, no se garanti
   * Integración Avanzada: Uso de Scripts de Python dentro de Power BI para el pre-procesamiento avanzado de datos y la automatización de la actualización de los modelos visuales.
 
 ## 🛠️ Stack Tecnológico
-* **Lenguaje:** Python 3.11.7
-* **Librerías principales:** Selenium 4.28.1, Requests 2.32.4, PyMySQL 1.1.2
+* **Lenguaje:** Python 3.14
 * **Gestion Base de Datos:** DBeaver.
 * **Versionado:** GitHub.
 
