@@ -5,7 +5,7 @@
     <h4 style="margin: 5px 0 0 0; font-weight: normal; color: #888;">
       Obtencion de informacion mediante Webscrapping. <br>
       Persistencia en base de datos MySQL en AWS. <br>
-      Creacion de paneles mediante Power Bi.
+      Creacion de paneles mediante PowerBi.
     </h4>
   </div>
 
