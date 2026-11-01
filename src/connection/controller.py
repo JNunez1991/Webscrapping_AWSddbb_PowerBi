@@ -3,8 +3,7 @@
 
 import os
 from dataclasses import dataclass, field
-from typing import Iterable
-from urllib.parse import quote_plus
+from typing import Iterable, cast
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -16,11 +15,12 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from .blueprint import Credentials
 
+
 @dataclass
 class SetConnection:
     """Conexion a AWS"""
 
-    path:str
+    path: str
     engine: Engine = field(init=False)
 
     def __post_init__(self):
@@ -40,14 +40,14 @@ class SetConnection:
         """Extrae las credenciales del .env"""
 
         return Credentials(
-            host=os.getenv("DB_HOST"), # type:ignore
-            port=os.getenv("DB_PORT"), # type:ignore
-            database=os.getenv("DB_NAME"), # type:ignore
-            user=os.getenv("DB_USER"), # type:ignore
-            password=os.getenv("DB_PASSWORD"), # type:ignore
+            host=os.getenv("DB_HOST"),  # type:ignore
+            port=os.getenv("DB_PORT"),  # type:ignore
+            database=os.getenv("DB_NAME"),  # type:ignore
+            user=os.getenv("DB_USER"),  # type:ignore
+            password=os.getenv("DB_PASSWORD"),  # type:ignore
         )
 
-    def set_engine(self, credentials:Credentials) -> Engine:
+    def set_engine(self, credentials: Credentials) -> Engine:
         """
         Genera el motor, el cual se encarga de:
             - Abrir la conexion
@@ -68,9 +68,9 @@ class SetConnection:
 
     def to_database(
         self,
-        data:pd.DataFrame,
-        tablename:str,
-        engine:Engine,
+        data: pd.DataFrame,
+        tablename: str,
+        engine: Engine,
     ) -> None:
         """Almacena la data en bbdd, y cuenta los registros persistidos"""
 
@@ -84,26 +84,18 @@ class SetConnection:
             return
         print(f"    --> No se añadieron nuevos registros en {tablename}")
 
-    def get_total_rows(
-        self,
-        tablename:str,
-        engine:Engine,
-        stored_procedure:str = "sp_total_rows"
-    ) -> int:
+    def get_total_rows(self, tablename: str, engine: Engine, sp: str = "sp_total_rows") -> int:
         """Cuenta la cantidad de filas en cierta tabla"""
 
-        with engine.begin() as conn:
-            conn.execute(
-                text(f"CALL {stored_procedure}(:table, @total)"),
-                {"table": tablename}
-            )
-            return conn.execute(text("SELECT @total")).scalar() # type:ignore
+        with engine.connect() as conn:
+            result = conn.execute(text(f"CALL {sp}(:table)"), {"table": tablename})
+            return cast(int, result.scalar())
 
     def data_to_ddbb(
         self,
-        data:pd.DataFrame,
-        tablename:str,
-        engine:Engine,
+        data: pd.DataFrame,
+        tablename: str,
+        engine: Engine,
     ) -> None:
         """Persiste la data en bbdd"""
 
@@ -121,10 +113,10 @@ class SetConnection:
 
     def insert_ignore(
         self,
-        table:SQLTable,
-        conn:Connection,
-        keys:list[str],
-        data_iter:Iterable[tuple],
+        table: SQLTable,
+        conn: Connection,
+        keys: list[str],
+        data_iter: Iterable[tuple],
     ) -> int:
         """
         Persiste datos en bbdd ignorando duplicados.
